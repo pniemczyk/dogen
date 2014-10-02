@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require 'commander/import'
+require 'awesome_print'
+require 'dogen'
+
+base = Dogen::Base.new
+
+program :version,     Dogen::VERSION
+program :description, Dogen::DESCRIPTION
+
+command :c do |c|
+  c.syntax = 'dogen c [options]'
+  c.summary = 'configuration'
+  c.description = 'setup repository'
+  c.example 'set repository', '--repository path::/home/user/Dropbox/Templates'
+  c.option '--repository', 'setup repository source'
+  c.action do |args, options|
+    base.set_repository(args) if options.repository
+  end
+end
+
+command :g do |c|
+  c.syntax = 'dogen g [options]'
+  c.summary = 'documents generator'
+  c.description = 'All options needed to generate document'
+  c.example 'generate file', 'base/gem/README.md title:"Test title"'
+  c.example 'generate files', 'base/gem'
+  c.option '-j', 'load variables from json file'
+  c.action do |args, options|
+    path = args.shift
+    if options.j
+      opts = base.read_opts_from_json(args.first.to_s)
+      base.generate(path, opts)
+    else
+      opts = base.parse_opts(args)
+      base.generate(path, opts)
+    end
+  end
+end

@@ -1,5 +1,7 @@
-require "dogen/version"
+require 'dogen/version'
+require 'dogen/description'
+require 'dogen/configuration'
+require 'dogen/base'
 
 module Dogen
-  # Your code goes here...
 end
